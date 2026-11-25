@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-icon">▤</span><div><strong>Libra</strong><small>Library System</small></div></div>
+      <nav>
+        <button class="nav-item active" data-page="dashboard"><span>▦</span> Tổng quan</button>
+        <button class="nav-item" data-page="books"><span>▤</span> Quản lý sách</button>
+        <button class="nav-item" data-page="loans"><span>↗</span> Mượn / trả sách</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="avatar">AD</div><div><strong>Admin</strong><small>Thủ thư</small></div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow">LIBRARY MANAGEMENT</p><h1 id="page-title">Tổng quan</h1></div>
+        <div class="top-actions"><span class="today" id="today"></span><button class="primary" id="header-add">＋ Thêm sách</button></div>
+      </header>
+
+      <section id="dashboard-page" class="page">
+        <div class="welcome"><div><h2>Xin chào, Thủ thư! 👋</h2><p>Đây là tình hình thư viện của bạn hôm nay.</p></div><div class="welcome-mark">📚</div></div>
+        <div class="stats">
+          <article class="stat-card"><div class="stat-top"><span>Tổng số sách</span><span class="stat-icon blue">▤</span></div><strong id="stat-total">0</strong><small>Đầu sách trong thư viện</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Sách có sẵn</span><span class="stat-icon green">✓</span></div><strong id="stat-available">0</strong><small>Sẵn sàng cho mượn</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Đang được mượn</span><span class="stat-icon orange">↗</span></div><strong id="stat-borrowed">0</strong><small>Số bản sách đang mượn</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Đầu sách</span><span class="stat-icon purple">▧</span></div><strong id="stat-titles">0</strong><small>Loại sách khác nhau</small></article>
+        </div>
+        <div class="section-heading"><div><h2>Sách gần đây</h2><p>Một số sách trong bộ sưu tập</p></div><button class="text-button" data-goto="books">Xem tất cả →</button></div>
+        <div class="table-wrap"><table><thead><tr><th>TÊN SÁCH</th><th>TÁC GIẢ</th><th>THỂ LOẠI</th><th>TÌNH TRẠNG</th><th>SỐ LƯỢNG</th></tr></thead><tbody id="recent-books"></tbody></table></div>
+      </section>
+
+      <section id="books-page" class="page hidden">
+        <div class="section-heading"><div><h2>Danh sách sách</h2><p>Thêm, cập nhật hoặc xóa sách trong thư viện.</p></div><button class="primary" id="add-book">＋ Thêm sách mới</button></div>
+        <div class="toolbar"><div class="search-box"><span>⌕</span><input id="search" type="search" placeholder="Tìm theo tên sách, tác giả..."></div><select id="category-filter"><option value="">Tất cả thể loại</option><option>Technology</option><option>Novel</option><option>Science</option><option>Education</option><option>Other</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>TÊN SÁCH</th><th>TÁC GIẢ</th><th>THỂ LOẠI</th><th>TÌNH TRẠNG</th><th>SỐ LƯỢNG</th><th>THAO TÁC</th></tr></thead><tbody id="books-list"></tbody></table><div id="empty-books" class="empty hidden">Không tìm thấy sách phù hợp.</div></div>
+      </section>
+
+      <section id="loans-page" class="page hidden">
+        <div class="section-heading"><div><h2>Mượn / trả sách</h2><p>Quản lý các bản sách đang được mượn.</p></div></div>
+        <div class="toolbar"><div class="search-box"><span>⌕</span><input id="loan-search" type="search" placeholder="Tìm tên sách hoặc người mượn..."></div><select id="loan-filter"><option value="all">Tất cả</option><option value="borrowed">Đang mượn</option><option value="returned">Đã trả</option></select><button class="primary" id="new-loan">＋ Tạo lượt mượn</button></div>
+        <div class="table-wrap"><table><thead><tr><th>TÊN SÁCH</th><th>NGƯỜI MƯỢN</th><th>NGÀY MƯỢN</th><th>NGÀY TRẢ</th><th>TRẠNG THÁI</th><th>THAO TÁC</th></tr></thead><tbody id="loans-list"></tbody></table><div id="empty-loans" class="empty hidden">Chưa có lượt mượn nào.</div></div>
+      </section>
+      <footer>© 2025 Libra Library System <span>Quản lý thư viện đơn giản và hiệu quả</span></footer>
+    </main>
+  </div>
+
+  <dialog id="book-dialog">
+    <form id="book-form" method="dialog">
+      <div class="modal-head"><div><h2 id="book-modal-title">Thêm sách mới</h2><p>Điền thông tin sách bên dưới.</p></div><button type="button" class="close" data-close="book-dialog">×</button></div>
+      <input type="hidden" id="book-id">
+      <label>Tên sách<input id="book-name" required maxlength="100" placeholder="Ví dụ: Clean Code"></label>
+      <label>Tác giả<input id="book-author" required maxlength="80" placeholder="Tên tác giả"></label>
+      <div class="form-row"><label>Thể loại<select id="book-category"><option>Technology</option><option>Novel</option><option>Science</option><option>Education</option><option>Other</option></select></label><label>Số lượng<input id="book-quantity" type="number" min="1" max="999" value="1" required></label></div>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="book-dialog">Hủy</button><button type="submit" class="primary">Lưu sách</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="loan-dialog">
+    <form id="loan-form" method="dialog">
+      <div class="modal-head"><div><h2>Tạo lượt mượn</h2><p>Nhập thông tin người mượn sách.</p></div><button type="button" class="close" data-close="loan-dialog">×</button></div>
+      <label>Chọn sách<select id="loan-book" required></select></label>
+      <label>Người mượn<input id="borrower" required maxlength="80" placeholder="Họ và tên"></label>
+      <label>Ngày mượn<input id="borrow-date" type="date" required></label>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="loan-dialog">Hủy</button><button type="submit" class="primary">Xác nhận mượn</button></div>
+    </form>
+  </dialog>
+  <div id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
